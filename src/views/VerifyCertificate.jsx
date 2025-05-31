@@ -73,24 +73,27 @@ const VerifyCertificate = () => {
 
         const certs = await web3Service.getCertificatesByOwner(searchValue);
         
-        // Fetch metadata for each certificate
-        for (const cert of certs) {
-          try {
-            const metadata = await ipfsService.fetchMetadata(cert.tokenURI);
-            results.push({
+        if (certs.length === 0) {
+          throw new Error('No certificates found for this address');
+        }
+        
+        // Batch fetch metadata for better performance
+        const metadataPromises = certs.map(cert => 
+          ipfsService.fetchMetadata(cert.tokenURI)
+            .then(metadata => ({
               tokenId: cert.tokenId,
               owner: searchValue,
               metadata: metadata,
               tokenURI: cert.tokenURI,
-            });
-          } catch (err) {
-            console.error(`Failed to fetch metadata for token ${cert.tokenId}:`, err);
-          }
-        }
-
-        if (results.length === 0) {
-          throw new Error('No certificates found for this address');
-        }
+            }))
+            .catch(err => {
+              console.error(`Failed to fetch metadata for token ${cert.tokenId}:`, err);
+              return null;
+            })
+        );
+        
+        const metadataResults = await Promise.all(metadataPromises);
+        results = metadataResults.filter(result => result !== null);
       }
 
       setCertificates(results);

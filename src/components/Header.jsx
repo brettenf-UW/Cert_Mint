@@ -8,6 +8,7 @@ import {
   IconButton,
   Avatar,
   Divider,
+  Skeleton,
 } from '@mui/material';
 import SchoolIcon from '@mui/icons-material/School';
 import VerifiedUserIcon from '@mui/icons-material/VerifiedUser';
@@ -16,7 +17,7 @@ import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 
 const Header = ({ onNavigate, web3, currentView }) => {
-  const { account, isConnected, connect, isMinter } = web3;
+  const { account, isConnected, connect, isMinter, isCheckingRole } = web3;
 
   const formatAddress = (address) => {
     if (!address) return '';
@@ -66,24 +67,35 @@ const Header = ({ onNavigate, web3, currentView }) => {
 
         <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
           <Button
+            variant={currentView === 'verify' ? 'contained' : 'outlined'}
             startIcon={<VerifiedUserIcon />}
             onClick={() => onNavigate('verify')}
             sx={{
-              color: currentView === 'verify' ? 'primary.main' : 'text.secondary',
-              fontWeight: currentView === 'verify' ? 600 : 400,
+              color: currentView === 'verify' ? 'white' : 'success.main',
+              bgcolor: currentView === 'verify' ? 'success.main' : 'transparent',
+              borderColor: 'success.main',
+              fontWeight: 600,
               '&:hover': {
-                backgroundColor: 'rgba(0,0,0,0.04)',
+                bgcolor: currentView === 'verify' ? 'success.dark' : 'success.light',
+                borderColor: 'success.dark',
               },
-              borderRadius: '4px',
-              px: 2,
+              borderRadius: '24px',
+              px: 3,
+              textTransform: 'none',
             }}
           >
-            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-              <Typography variant="body2">Verify</Typography>
-            </Box>
+            Verify Certificate
           </Button>
           
-          {isMinter && (
+          {isConnected && isCheckingRole && (
+            <>
+              <Divider orientation="vertical" flexItem sx={{ mx: 1 }} />
+              <Skeleton variant="rounded" width={100} height={36} sx={{ borderRadius: '4px' }} />
+              <Skeleton variant="rounded" width={80} height={36} sx={{ borderRadius: '4px' }} />
+            </>
+          )}
+          
+          {isConnected && !isCheckingRole && isMinter && (
             <>
               <Divider orientation="vertical" flexItem sx={{ mx: 1 }} />
               <Button

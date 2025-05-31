@@ -1,14 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, lazy, Suspense } from 'react';
 import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
-import { Container, Box } from '@mui/material';
+import { Container, Box, CircularProgress } from '@mui/material';
 import { theme } from './theme/theme';
 import Header from './components/Header';
+import VerifyFAB from './components/VerifyFAB';
 import Hero from './views/Hero';
-import IssueCertificate from './views/IssueCertificate';
-import VerifyCertificate from './views/VerifyCertificate';
-import IssuerDashboard from './views/IssuerDashboard';
 import { useWeb3 } from './hooks/useWeb3';
+
+// Lazy load heavy components
+const IssueCertificate = lazy(() => import('./views/IssueCertificate'));
+const VerifyCertificate = lazy(() => import('./views/VerifyCertificate'));
+const IssuerDashboard = lazy(() => import('./views/IssuerDashboard'));
 
 function App() {
   const [currentView, setCurrentView] = useState('home');
@@ -41,10 +44,19 @@ function App() {
             renderView()
           ) : (
             <Container maxWidth="lg" sx={{ py: 6 }}>
-              {renderView()}
+              <Suspense 
+                fallback={
+                  <Box display="flex" justifyContent="center" alignItems="center" minHeight={400}>
+                    <CircularProgress />
+                  </Box>
+                }
+              >
+                {renderView()}
+              </Suspense>
             </Container>
           )}
         </Box>
+        <VerifyFAB onNavigate={setCurrentView} currentView={currentView} />
       </Box>
     </ThemeProvider>
   );

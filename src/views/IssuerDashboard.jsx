@@ -16,6 +16,7 @@ import {
   Paper,
   Chip,
   Button,
+  Pagination,
 } from '@mui/material';
 import {
   Search,
@@ -41,6 +42,8 @@ const IssuerDashboard = ({ web3, onNavigate }) => {
   const [viewMode, setViewMode] = useState('list');
   const [tabValue, setTabValue] = useState(0);
   const [courseMetadata, setCourseMetadata] = useState({});
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 12;
 
   useEffect(() => {
     if (isConnected && isMinter && account) {
@@ -111,6 +114,7 @@ const IssuerDashboard = ({ web3, onNavigate }) => {
     }
 
     setFilteredCerts(filtered);
+    setCurrentPage(1); // Reset to first page when filter changes
   };
 
   const handleReissue = (metadata, originalCert) => {
@@ -349,18 +353,33 @@ const IssuerDashboard = ({ web3, onNavigate }) => {
             )}
           </Box>
         ) : (
-          <Grid container spacing={viewMode === 'grid' ? 3 : 0}>
-            {filteredCerts.map(cert => (
-              <Grid item xs={12} md={viewMode === 'grid' ? 6 : 12} key={cert.tokenId}>
-                <CertificateCard
-                  certificate={cert}
-                  onReissue={handleReissue}
-                  showRecipient={true}
-                  compact={viewMode === 'grid'}
+          <>
+            <Grid container spacing={viewMode === 'grid' ? 3 : 0}>
+              {filteredCerts
+                .slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
+                .map(cert => (
+                  <Grid item xs={12} md={viewMode === 'grid' ? 6 : 12} key={cert.tokenId}>
+                    <CertificateCard
+                      certificate={cert}
+                      onReissue={handleReissue}
+                      showRecipient={true}
+                      compact={viewMode === 'grid'}
+                    />
+                  </Grid>
+                ))}
+            </Grid>
+            {filteredCerts.length > itemsPerPage && (
+              <Box display="flex" justifyContent="center" mt={4}>
+                <Pagination
+                  count={Math.ceil(filteredCerts.length / itemsPerPage)}
+                  page={currentPage}
+                  onChange={(e, page) => setCurrentPage(page)}
+                  color="primary"
+                  size="large"
                 />
-              </Grid>
-            ))}
-          </Grid>
+              </Box>
+            )}
+          </>
         )}
       </Paper>
     </Box>

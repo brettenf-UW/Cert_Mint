@@ -11,6 +11,9 @@ LinkedIn Proof is a decentralized application (dApp) for issuing tamper-proof co
 ✅ **Web3 Integration**: MetaMask connection with ethers.js
 ✅ **IPFS Storage**: Multiple provider support (Pinata, Web3.Storage, local fallback)
 ✅ **Core Features**: Certificate issuance, verification, and wallet management
+✅ **Issuer Dashboard**: View all issued certificates with statistics and reissue functionality
+✅ **Performance Optimizations**: Lazy loading, caching, and pagination
+✅ **Enhanced UX**: Floating verify button, skeleton loaders, and quick access features
 
 ## Architecture
 
@@ -42,7 +45,8 @@ src/
 ├── views/
 │   ├── Hero.jsx            # Landing page
 │   ├── IssueCertificate.jsx # Certificate creation form
-│   └── VerifyCertificate.jsx # Certificate verification
+│   ├── VerifyCertificate.jsx # Certificate verification
+│   └── IssuerDashboard.jsx # Dashboard for certificate issuers
 └── App.jsx                 # Main application component
 ```
 
@@ -51,8 +55,9 @@ src/
 #### Web3 Service (`web3Service.js`)
 - MetaMask connection and network switching to Sepolia
 - Contract interaction methods
-- Role checking for minter permissions
+- Role checking for minter permissions with caching
 - Certificate querying by ID or owner
+- Batch operations for issuer dashboard
 
 #### IPFS Service (`ipfsService.js`)
 - Supports multiple storage providers:
@@ -60,6 +65,7 @@ src/
   - **Web3.Storage**: Alternative free option
   - **Local Storage**: Development fallback
 - Metadata structure follows NFT standards with attributes
+- In-memory caching for faster repeated fetches
 
 #### Certificate Metadata Format
 ```json
@@ -162,6 +168,22 @@ npx hardhat console --network sepolia
 - **Private Key Safety**: Never commit private keys; use environment variables
 - **IPFS Immutability**: Certificate data cannot be altered once uploaded
 
+## Recent Updates
+
+### Performance Optimizations
+- **Lazy Loading**: Heavy components (Issue, Verify, Dashboard) load on-demand
+- **Code Splitting**: Separate vendor bundles for React, MUI, and Web3
+- **Caching**: IPFS metadata and role checks are cached
+- **Pagination**: Dashboard shows 12 certificates per page
+- **Batch Operations**: Parallel metadata fetching
+
+### UX Enhancements
+- **Issuer Dashboard**: View all issued certificates with statistics
+- **Reissue Feature**: One-click template reuse for similar certificates
+- **Quick Verify Access**: Floating action button and prominent header button
+- **Skeleton Loaders**: Visual feedback during role checking
+- **Search & Filter**: Find certificates by course, student, or token ID
+
 ## Future Enhancements
 
 1. **Certificate Templates**: Pre-designed certificate images
@@ -170,7 +192,7 @@ npx hardhat console --network sepolia
 4. **Skills Taxonomy**: Standardized course categorization
 5. **Cross-chain Support**: Deploy to multiple networks
 6. **Mobile App**: Native mobile experience
-7. **Analytics Dashboard**: Track issued certificates
+7. **Export Features**: Download certificates as PDF
 8. **Revocation System**: Allow issuers to revoke certificates
 
 ## Troubleshooting

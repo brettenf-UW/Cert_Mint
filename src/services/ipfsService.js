@@ -15,6 +15,11 @@ console.log('Using Pinata:', !!(PINATA_API_KEY || PINATA_JWT));
 console.log('Using NFT.Storage:', !!NFT_STORAGE_API_KEY);
 
 export class IPFSService {
+  constructor() {
+    // Cache for metadata to avoid repeated fetches
+    this.metadataCache = new Map();
+  }
+
   async uploadMetadata(certificateData) {
     try {
       // Create metadata JSON
@@ -140,26 +145,37 @@ export class IPFSService {
 
   // Fetch metadata from IPFS (or localStorage for demo)
   async fetchMetadata(ipfsUrl) {
+    if (!ipfsUrl) return null;
+    
+    // Check cache first
+    if (this.metadataCache.has(ipfsUrl)) {
+      return this.metadataCache.get(ipfsUrl);
+    }
+    
     try {
       const cid = ipfsUrl.replace('ipfs://', '');
       
       // Check localStorage first (for demo)
       const localData = localStorage.getItem(`cert_${cid}`);
       if (localData) {
-        return JSON.parse(localData);
+        const metadata = JSON.parse(localData);
+        this.metadataCache.set(ipfsUrl, metadata);
+        return metadata;
       }
 
       // Try to fetch from IPFS gateway
       const gateways = [
-        `https://ipfs.io/ipfs/${cid}`,
         `https://gateway.pinata.cloud/ipfs/${cid}`,
+        `https://ipfs.io/ipfs/${cid}`,
         `https://cloudflare-ipfs.com/ipfs/${cid}`,
       ];
 
       for (const gateway of gateways) {
         try {
           const response = await axios.get(gateway, { timeout: 10000 });
-          return response.data;
+          const metadata = response.data;
+          this.metadataCache.set(ipfsUrl, metadata);
+          return metadata;
         } catch (err) {
           console.warn(`Failed to fetch from ${gateway}:`, err.message);
         }

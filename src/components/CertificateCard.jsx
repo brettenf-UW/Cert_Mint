@@ -24,7 +24,7 @@ import {
 } from '@mui/icons-material';
 import { ipfsService } from '../services/ipfsService';
 
-const CertificateCard = ({ certificate, onReissue, showRecipient = true, compact = false }) => {
+const CertificateCard = React.memo(({ certificate, onReissue, showRecipient = true, compact = false }) => {
   const [metadata, setMetadata] = useState(null);
   const [loading, setLoading] = useState(true);
   const [expanded, setExpanded] = useState(false);
@@ -227,6 +227,8 @@ const CertificateCard = ({ certificate, onReissue, showRecipient = true, compact
       </CardContent>
     </Card>
   );
-};
+});
+
+CertificateCard.displayName = 'CertificateCard';
 
 export default CertificateCard;

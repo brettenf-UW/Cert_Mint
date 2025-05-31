@@ -107,6 +107,23 @@ const Hero = ({ onNavigate, web3 }) => {
                   </Button>
                 ) : (
                   <>
+                    <Button
+                      variant="contained"
+                      size="large"
+                      startIcon={<VerifiedIcon />}
+                      onClick={() => onNavigate('verify')}
+                      sx={{ 
+                        px: 4,
+                        py: 2,
+                        fontSize: '1.1rem',
+                        bgcolor: 'success.main',
+                        '&:hover': {
+                          bgcolor: 'success.dark',
+                        }
+                      }}
+                    >
+                      Verify Certificate
+                    </Button>
                     {isMinter && (
                       <>
                         <Button
@@ -145,20 +162,6 @@ const Hero = ({ onNavigate, web3 }) => {
                         </Button>
                       </>
                     )}
-                    {!isMinter && (
-                      <Button
-                        variant="contained"
-                        size="large"
-                        onClick={() => onNavigate('verify')}
-                        sx={{ 
-                          px: 4,
-                          py: 2,
-                          fontSize: '1.1rem',
-                        }}
-                      >
-                        Verify Certificate
-                      </Button>
-                    )}
                   </>
                 )}
               </Box>
@@ -193,6 +196,32 @@ const Hero = ({ onNavigate, web3 }) => {
                 </Typography>
               </Paper>
             </Box>
+          </Box>
+        </Container>
+      </Box>
+
+      {/* Quick Verify Section */}
+      <Box sx={{ backgroundColor: 'success.light', py: 4 }}>
+        <Container maxWidth="lg">
+          <Box sx={{ textAlign: 'center' }}>
+            <Typography variant="h5" sx={{ mb: 2, fontWeight: 600, color: 'success.dark' }}>
+              Need to verify a certificate quickly?
+            </Typography>
+            <Button
+              variant="contained"
+              size="large"
+              startIcon={<VerifiedIcon />}
+              onClick={() => onNavigate('verify')}
+              sx={{
+                bgcolor: 'success.main',
+                '&:hover': { bgcolor: 'success.dark' },
+                fontSize: '1.1rem',
+                py: 1.5,
+                px: 4,
+              }}
+            >
+              Verify Certificate Now
+            </Button>
           </Box>
         </Container>
       </Box>

@@ -5,6 +5,7 @@ export const useWeb3 = () => {
   const [account, setAccount] = useState(null);
   const [isConnecting, setIsConnecting] = useState(false);
   const [isMinter, setIsMinter] = useState(false);
+  const [isCheckingRole, setIsCheckingRole] = useState(true);
   const [error, setError] = useState(null);
 
   // Check if already connected on mount
@@ -15,9 +16,12 @@ export const useWeb3 = () => {
         if (currentAccount) {
           setAccount(currentAccount);
           await checkMinterRole(currentAccount);
+        } else {
+          setIsCheckingRole(false);
         }
       } catch (err) {
         console.error('Error checking connection:', err);
+        setIsCheckingRole(false);
       }
     };
 
@@ -47,6 +51,7 @@ export const useWeb3 = () => {
   };
 
   const checkMinterRole = async (address) => {
+    setIsCheckingRole(true);
     try {
       await web3Service.connectWallet(); // Ensure contract is initialized
       const minterRole = await web3Service.getMinterRole();
@@ -55,6 +60,8 @@ export const useWeb3 = () => {
     } catch (err) {
       console.error('Error checking minter role:', err);
       setIsMinter(false);
+    } finally {
+      setIsCheckingRole(false);
     }
   };
 
@@ -84,6 +91,7 @@ export const useWeb3 = () => {
     account,
     isConnecting,
     isMinter,
+    isCheckingRole,
     error,
     connect,
     disconnect,

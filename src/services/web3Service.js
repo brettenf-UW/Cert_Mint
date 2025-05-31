@@ -9,6 +9,8 @@ export class Web3Service {
     this.provider = null;
     this.signer = null;
     this.contract = null;
+    this.roleCache = new Map(); // Cache role checks
+    this.roleCacheTimeout = 60000; // 1 minute cache
   }
 
   async connectWallet() {
@@ -93,8 +95,17 @@ export class Web3Service {
   async hasRole(role, address) {
     if (!this.contract) throw new Error('Not connected to contract');
     
+    const cacheKey = `${role}-${address}`;
+    const cached = this.roleCache.get(cacheKey);
+    
+    if (cached && Date.now() - cached.timestamp < this.roleCacheTimeout) {
+      return cached.value;
+    }
+    
     try {
-      return await this.contract.hasRole(role, address);
+      const hasRole = await this.contract.hasRole(role, address);
+      this.roleCache.set(cacheKey, { value: hasRole, timestamp: Date.now() });
+      return hasRole;
     } catch (error) {
       console.error('Error checking role:', error);
       throw error;
