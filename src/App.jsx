@@ -7,6 +7,7 @@ import Header from './components/Header';
 import Hero from './views/Hero';
 import IssueCertificate from './views/IssueCertificate';
 import VerifyCertificate from './views/VerifyCertificate';
+import IssuerDashboard from './views/IssuerDashboard';
 import { useWeb3 } from './hooks/useWeb3';
 
 function App() {
@@ -19,6 +20,8 @@ function App() {
         return <IssueCertificate web3={web3} />;
       case 'verify':
         return <VerifyCertificate />;
+      case 'dashboard':
+        return <IssuerDashboard web3={web3} onNavigate={setCurrentView} />;
       default:
         return <Hero onNavigate={setCurrentView} web3={web3} />;
     }

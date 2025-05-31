@@ -15,6 +15,7 @@ import PublicIcon from '@mui/icons-material/Public';
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import SchoolIcon from '@mui/icons-material/School';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import DashboardIcon from '@mui/icons-material/Dashboard';
 
 const Hero = ({ onNavigate, web3 }) => {
   const { isConnected, connect, isMinter } = web3;
@@ -107,40 +108,57 @@ const Hero = ({ onNavigate, web3 }) => {
                 ) : (
                   <>
                     {isMinter && (
+                      <>
+                        <Button
+                          variant="contained"
+                          size="large"
+                          startIcon={<DashboardIcon />}
+                          onClick={() => onNavigate('dashboard')}
+                          sx={{ 
+                            px: 4,
+                            py: 2,
+                            fontSize: '1.1rem',
+                          }}
+                        >
+                          View Dashboard
+                        </Button>
+                        <Button
+                          variant="outlined"
+                          size="large"
+                          endIcon={<ArrowForwardIcon />}
+                          onClick={() => onNavigate('issue')}
+                          sx={{ 
+                            px: 4,
+                            py: 2,
+                            fontSize: '1.1rem',
+                            borderWidth: 2,
+                            borderColor: 'primary.main',
+                            color: 'primary.main',
+                            '&:hover': {
+                              borderWidth: 2,
+                              borderColor: 'primary.dark',
+                              backgroundColor: 'rgba(11, 102, 194, 0.04)',
+                            }
+                          }}
+                        >
+                          Issue Certificate
+                        </Button>
+                      </>
+                    )}
+                    {!isMinter && (
                       <Button
                         variant="contained"
                         size="large"
-                        endIcon={<ArrowForwardIcon />}
-                        onClick={() => onNavigate('issue')}
+                        onClick={() => onNavigate('verify')}
                         sx={{ 
                           px: 4,
                           py: 2,
                           fontSize: '1.1rem',
                         }}
                       >
-                        Issue Certificate
+                        Verify Certificate
                       </Button>
                     )}
-                    <Button
-                      variant="outlined"
-                      size="large"
-                      onClick={() => onNavigate('verify')}
-                      sx={{ 
-                        px: 4,
-                        py: 2,
-                        fontSize: '1.1rem',
-                        borderWidth: 2,
-                        borderColor: 'primary.main',
-                        color: 'primary.main',
-                        '&:hover': {
-                          borderWidth: 2,
-                          borderColor: 'primary.dark',
-                          backgroundColor: 'rgba(11, 102, 194, 0.04)',
-                        }
-                      }}
-                    >
-                      Verify Certificate
-                    </Button>
                   </>
                 )}
               </Box>

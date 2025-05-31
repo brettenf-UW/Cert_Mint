@@ -13,6 +13,7 @@ import SchoolIcon from '@mui/icons-material/School';
 import VerifiedUserIcon from '@mui/icons-material/VerifiedUser';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
+import DashboardIcon from '@mui/icons-material/Dashboard';
 
 const Header = ({ onNavigate, web3, currentView }) => {
   const { account, isConnected, connect, isMinter } = web3;
@@ -85,6 +86,23 @@ const Header = ({ onNavigate, web3, currentView }) => {
           {isMinter && (
             <>
               <Divider orientation="vertical" flexItem sx={{ mx: 1 }} />
+              <Button
+                startIcon={<DashboardIcon />}
+                onClick={() => onNavigate('dashboard')}
+                sx={{
+                  color: currentView === 'dashboard' ? 'primary.main' : 'text.secondary',
+                  fontWeight: currentView === 'dashboard' ? 600 : 400,
+                  '&:hover': {
+                    backgroundColor: 'rgba(0,0,0,0.04)',
+                  },
+                  borderRadius: '4px',
+                  px: 2,
+                }}
+              >
+                <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                  <Typography variant="body2">Dashboard</Typography>
+                </Box>
+              </Button>
               <Button
                 startIcon={<AddCircleIcon />}
                 onClick={() => onNavigate('issue')}

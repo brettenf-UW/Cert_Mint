@@ -33,6 +33,26 @@ const IssueCertificate = ({ web3 }) => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(null);
 
+  // Check for reissue template on component mount
+  React.useEffect(() => {
+    const template = sessionStorage.getItem('reissueTemplate');
+    if (template) {
+      try {
+        const templateData = JSON.parse(template);
+        setFormData(prev => ({
+          ...prev,
+          courseName: templateData.courseName || '',
+          issuerName: templateData.issuerName || '',
+          verificationUrl: templateData.externalUrl || '',
+        }));
+        // Clear the template after using it
+        sessionStorage.removeItem('reissueTemplate');
+      } catch (error) {
+        console.error('Error loading template:', error);
+      }
+    }
+  }, []);
+
   const handleChange = (field) => (event) => {
     setFormData({ ...formData, [field]: event.target.value });
     setError('');

@@ -170,6 +170,80 @@ export class Web3Service {
       throw error;
     }
   }
+
+  async getCertificatesIssuedBy(issuerAddress) {
+    if (!this.contract) throw new Error('Not connected to contract');
+    
+    try {
+      // Get all CertificateIssued events from this issuer
+      const filter = this.contract.filters.CertificateIssued(null, null, issuerAddress);
+      const events = await this.contract.queryFilter(filter);
+      
+      const certificates = [];
+      const courseStats = {};
+      
+      for (const event of events) {
+        const tokenId = event.args[0].toString();
+        const recipient = event.args[1];
+        const tokenURI = event.args[3];
+        
+        // Check if certificate still exists (not burned)
+        let currentOwner = null;
+        let isActive = false;
+        try {
+          currentOwner = await this.contract.ownerOf(tokenId);
+          isActive = true;
+        } catch {
+          // Token might be burned
+          isActive = false;
+        }
+        
+        const cert = {
+          tokenId,
+          recipient,
+          currentOwner,
+          tokenURI,
+          isActive,
+          blockNumber: event.blockNumber,
+          transactionHash: event.transactionHash
+        };
+        
+        certificates.push(cert);
+        
+        // Track course statistics
+        if (isActive && tokenURI) {
+          if (!courseStats[tokenURI]) {
+            courseStats[tokenURI] = {
+              count: 0,
+              firstIssued: event.blockNumber,
+              lastIssued: event.blockNumber,
+              tokenIds: []
+            };
+          }
+          courseStats[tokenURI].count++;
+          courseStats[tokenURI].lastIssued = Math.max(courseStats[tokenURI].lastIssued, event.blockNumber);
+          courseStats[tokenURI].tokenIds.push(tokenId);
+        }
+      }
+      
+      return { certificates, courseStats };
+    } catch (error) {
+      console.error('Error getting certificates issued by:', error);
+      throw error;
+    }
+  }
+
+  async getBlockTimestamp(blockNumber) {
+    if (!this.provider) throw new Error('Not connected to provider');
+    
+    try {
+      const block = await this.provider.getBlock(blockNumber);
+      return block ? block.timestamp : null;
+    } catch (error) {
+      console.error('Error getting block timestamp:', error);
+      return null;
+    }
+  }
 }
 
 export const web3Service = new Web3Service();
