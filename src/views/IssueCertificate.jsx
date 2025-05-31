@@ -201,8 +201,13 @@ const IssueCertificate = ({ web3 }) => {
                   value={formData.completionDate}
                   onChange={handleDateChange}
                   disabled={isLoading}
-                  renderInput={(params) => <TextField {...params} fullWidth />}
                   sx={{ width: '100%' }}
+                  slotProps={{
+                    textField: {
+                      fullWidth: true,
+                      variant: "outlined"
+                    }
+                  }}
                 />
               </LocalizationProvider>
 
@@ -212,10 +217,15 @@ const IssueCertificate = ({ web3 }) => {
                   value={formData.expirationDate}
                   onChange={handleExpirationDateChange}
                   disabled={isLoading}
-                  renderInput={(params) => <TextField {...params} fullWidth />}
                   sx={{ width: '100%' }}
                   minDate={formData.completionDate}
-                  helperText="Leave blank for certificates that don't expire"
+                  slotProps={{
+                    textField: {
+                      fullWidth: true,
+                      variant: "outlined",
+                      helperText: "Leave blank for certificates that don't expire"
+                    }
+                  }}
                 />
               </LocalizationProvider>
 
