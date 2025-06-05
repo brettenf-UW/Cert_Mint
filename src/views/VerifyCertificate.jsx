@@ -160,6 +160,10 @@ const VerifyCertificate = () => {
               margin="normal"
               disabled={isLoading}
               placeholder={searchType === 'tokenId' ? '' : '0x...'}
+              autoComplete="off"
+              inputProps={{
+                autoComplete: searchType === 'tokenId' ? 'off' : 'on'
+              }}
             />
 
             {error && (
