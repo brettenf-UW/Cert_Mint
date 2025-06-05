@@ -129,14 +129,6 @@ This project is open source and available under the [MIT License](LICENSE).
 - **Issues**: [GitHub Issues](https://github.com/your-username/Cert_Mint/issues)
 - **Documentation**: See [claude.md](./claude.md) for detailed technical docs
 
-## 🎯 Roadmap
-
-- [ ] Certificate templates with custom designs
-- [ ] Bulk certificate issuance
-- [ ] Multi-chain support
-- [ ] Mobile app
-- [ ] PDF export functionality
-
 ---
 
 Built with ❤️ using React, Ethereum, and IPFS
