@@ -340,9 +340,15 @@ const IssuerDashboard = ({ web3, onNavigate }) => {
         {filteredCerts.length === 0 ? (
           <Box textAlign="center" py={4}>
             <Typography color="text.secondary">
-              {searchTerm ? 'No certificates match your search' : 'No certificates issued yet'}
+              {searchTerm 
+                ? 'No certificates match your search' 
+                : certificates.length === 0 
+                  ? 'No certificates issued yet'
+                  : tabValue === 2 
+                    ? 'No inactive certificates'
+                    : 'No active certificates'}
             </Typography>
-            {!searchTerm && (
+            {!searchTerm && certificates.length === 0 && (
               <Button
                 variant="contained"
                 sx={{ mt: 2 }}
