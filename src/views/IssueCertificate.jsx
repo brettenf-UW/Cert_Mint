@@ -102,7 +102,7 @@ const IssueCertificate = ({ web3 }) => {
         studentName: formData.studentName,
         completionDate: formData.completionDate,
         expirationDate: formData.expirationDate,
-        verificationUrl: formData.verificationUrl || window.location.origin,
+        externalUrl: formData.verificationUrl, // Only pass if provided
       });
 
       // Issue certificate on blockchain

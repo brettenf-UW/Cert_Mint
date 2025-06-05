@@ -11,7 +11,8 @@
       "Bash(true)",
       "Bash(rm:*)",
       "Bash(rmdir:*)",
-      "Bash(mkdir:*)"
+      "Bash(mkdir:*)",
+      "Bash(grep:*)"
     ],
     "deny": []
   }

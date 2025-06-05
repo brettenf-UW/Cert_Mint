@@ -56,9 +56,13 @@ export class IPFSService {
         name: `Certificate: ${certificateData.courseName}`,
         description: `Awarded by ${certificateData.issuer}`,
         image: 'ipfs://bafkreih7qfhvoh3gvjrnwnqmkfk3mly5s2lx3nlwb6cxdxe6motpbbqpsu', // Placeholder certificate image
-        external_url: `https://linkedinproof.app/verify/${certificateData.tokenId || 'pending'}`,
         attributes: attributes,
       };
+
+      // Only add external_url if provided by the issuer
+      if (certificateData.externalUrl) {
+        metadata.external_url = certificateData.externalUrl;
+      }
 
       // Try Pinata first if configured
       if ((PINATA_API_KEY && PINATA_SECRET) || PINATA_JWT) {
