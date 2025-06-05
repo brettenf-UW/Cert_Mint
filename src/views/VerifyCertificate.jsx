@@ -286,7 +286,7 @@ const VerifyCertificate = () => {
                 </Typography>
               </Box>
 
-              {cert.metadata?.external_url && (
+              {cert.metadata?.external_url && !cert.metadata.external_url.includes('linkedinproof.app') && (
                 <Box sx={{ gridColumn: { sm: 'span 2' } }}>
                   <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 600, textTransform: 'uppercase' }}>
                     Verification Link
