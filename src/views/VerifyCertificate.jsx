@@ -159,7 +159,7 @@ const VerifyCertificate = () => {
               onChange={(e) => setSearchValue(e.target.value)}
               margin="normal"
               disabled={isLoading}
-              placeholder={searchType === 'tokenId' ? '1' : '0x...'}
+              placeholder={searchType === 'tokenId' ? '' : '0x...'}
             />
 
             {error && (
